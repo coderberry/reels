@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Reels",
+  "version": "1.0.1",
+  "description": "Video controls, speed and volume memory, shortcuts, loops, auto-scroll, quality selection and downloads for Instagram.",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage", "downloads"],
+  "action": {
+    "default_title": "Reels",
+    "default_popup": "popup.html"
+  },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["media.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

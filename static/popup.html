@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reels</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header class="brand">
+        <div class="brand-mark" aria-hidden="true"><span></span></div>
+        <div>
+          <h1>Reels</h1>
+          <p>Better Instagram playback, kept on this device.</p>
+        </div>
+      </header>
+
+      <fieldset id="settings" disabled>
+        <legend class="visually-hidden">Extension settings</legend>
+
+        <section class="panel master-panel" aria-labelledby="general-heading">
+          <div class="setting-row">
+            <div class="setting-copy">
+              <h2 id="general-heading">Extension enabled</h2>
+              <p>Show controls and apply your preferences.</p>
+            </div>
+            <label class="switch" for="enabled">
+              <input id="enabled" name="enabled" type="checkbox" />
+              <span class="switch-track" aria-hidden="true"></span>
+              <span class="visually-hidden">Enable Reels</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="playback-heading">
+          <div class="section-heading">
+            <p class="eyebrow">Playback</p>
+            <h2 id="playback-heading">Remember preferences</h2>
+          </div>
+
+          <label class="check-row" for="rememberMute">
+            <span>
+              <strong>Mute state</strong>
+              <small>Keep reels muted or unmuted.</small>
+            </span>
+            <input id="rememberMute" name="rememberMute" type="checkbox" />
+          </label>
+
+          <label class="check-row" for="rememberVolume">
+            <span>
+              <strong>Volume</strong>
+              <small>Reuse your last volume level.</small>
+            </span>
+            <input id="rememberVolume" name="rememberVolume" type="checkbox" />
+          </label>
+
+          <label class="check-row" for="rememberSpeed">
+            <span>
+              <strong>Playback speed</strong>
+              <small>Reuse your last selected speed.</small>
+            </span>
+            <input id="rememberSpeed" name="rememberSpeed" type="checkbox" />
+          </label>
+
+          <div class="defaults" aria-label="Playback defaults">
+            <label class="muted-control" for="muted">
+              <input id="muted" name="muted" type="checkbox" />
+              <span>Muted</span>
+            </label>
+
+            <label class="range-control" for="volume">
+              <span class="control-label">Volume</span>
+              <output id="volumeValue" for="volume">100%</output>
+              <input
+                id="volume"
+                name="volume"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value="1"
+              />
+            </label>
+
+            <label class="select-control" for="speed">
+              <span class="control-label">Speed</span>
+              <select id="speed" name="speed">
+                <option value="0.25">0.25×</option>
+                <option value="0.5">0.5×</option>
+                <option value="0.75">0.75×</option>
+                <option value="1">1×</option>
+                <option value="1.25">1.25×</option>
+                <option value="1.5">1.5×</option>
+                <option value="2">2×</option>
+                <option value="3">3×</option>
+                <option value="4">4×</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="features-heading">
+          <div class="section-heading">
+            <p class="eyebrow">Features</p>
+            <h2 id="features-heading">Reel controls</h2>
+          </div>
+
+          <label class="check-row" for="shortcuts">
+            <span>
+              <strong>Keyboard shortcuts</strong>
+              <small
+                ><kbd>A</kbd> back · <kbd>S</kbd> play · <kbd>D</kbd> forward ·
+                <kbd>M</kbd> mute · <kbd>F</kbd> fullscreen</small
+              >
+            </span>
+            <input id="shortcuts" name="shortcuts" type="checkbox" />
+          </label>
+
+          <label class="check-row" for="autoScroll">
+            <span>
+              <strong>Auto-scroll</strong>
+              <small>Advance when the current reel ends.</small>
+            </span>
+            <input id="autoScroll" name="autoScroll" type="checkbox" />
+          </label>
+
+          <label class="check-row" for="loopSections">
+            <span>
+              <strong>Loop sections</strong>
+              <small
+                ><kbd>[</kbd> start · <kbd>]</kbd> end ·
+                <kbd>\</kbd> clear</small
+              >
+            </span>
+            <input id="loopSections" name="loopSections" type="checkbox" />
+          </label>
+
+          <label class="check-row" for="preferHD">
+            <span>
+              <strong>Prefer HD</strong>
+              <small>Choose the best detected source when possible.</small>
+            </span>
+            <input id="preferHD" name="preferHD" type="checkbox" />
+          </label>
+
+          <p class="quality-note">
+            Quality changes may need reel metadata to reload. Downloads use only
+            an available source; HD is not guaranteed.
+          </p>
+        </section>
+      </fieldset>
+
+      <footer>
+        <p>No accounts, subscriptions, or telemetry.</p>
+        <p id="status" class="status" role="status" aria-live="polite">
+          Loading settings…
+        </p>
+      </footer>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
