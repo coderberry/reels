@@ -88,6 +88,6 @@ The build writes `dist`. Packaging runs all checks and creates a ZIP file and SH
 | `src/settings.ts`, `src/core.ts`  | Preference validation and shared media helpers                     |
 | `src/popup.ts`, `static/popup.*`  | Extension popup                                                    |
 
-The CI workflow runs the same checks on Linux. CI means automated repository checks. See [verification](VERIFICATION.md) for the checks completed for this build.
+The CI workflow runs the same checks on Linux. CI means automated repository checks.
 
 Chrome references: [content scripts](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts), [local storage](https://developer.chrome.com/docs/extensions/reference/api/storage), and [downloads](https://developer.chrome.com/docs/extensions/reference/api/downloads).
