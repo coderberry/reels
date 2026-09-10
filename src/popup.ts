@@ -61,10 +61,16 @@ function showTemporaryStatus(message: string): void {
   }, 1400);
 }
 
+function setRangeFill(input: HTMLInputElement, ratio: number): void {
+  const value = Number.isFinite(ratio) ? Math.min(1, Math.max(0, ratio)) : 0;
+  input.style.setProperty("--fill", `${value * 100}%`);
+}
+
 function render(settings: Settings): void {
   currentSettings = settings;
   for (const [key, input] of booleanInputs) input.checked = settings[key];
   volume.value = String(settings.volume);
+  setRangeFill(volume, settings.volume);
   volumeValue.value = `${Math.round(settings.volume * 100)}%`;
   speed.value = String(settings.speed);
 }
@@ -99,6 +105,7 @@ for (const [key, input] of booleanInputs) {
 }
 
 volume.addEventListener("input", () => {
+  setRangeFill(volume, Number(volume.value));
   volumeValue.value = `${Math.round(Number(volume.value) * 100)}%`;
 });
 
@@ -120,6 +127,7 @@ async function initialize(): Promise<void> {
     render(await readSettings());
     settingsFieldset.disabled = false;
     showStatus("");
+    document.documentElement.classList.add("ready");
   } catch (error) {
     showStatus(
       error instanceof Error ? error.message : "Could not load settings.",

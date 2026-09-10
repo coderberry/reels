@@ -71,29 +71,96 @@ host.id = "local-reel-controls";
 const root = host.attachShadow({ mode: "open" });
 root.innerHTML = `
 <style>
-  :host { all: initial; position: fixed; margin: 0; border: 0; padding: 0; inset: auto; background: transparent; z-index: 2147483647; display: none; color-scheme: dark; font: 13px/1.4 system-ui, sans-serif; color: #eef5f3; }
+  :host {
+    all: initial;
+    position: fixed;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    inset: auto;
+    background: transparent;
+    z-index: 2147483647;
+    display: none;
+    color-scheme: dark;
+    --accent: #30d158;
+    --text: rgb(255 255 255 / 92%);
+    --text-2: rgb(255 255 255 / 62%);
+    --glass: rgb(255 255 255 / 10%);
+    --rim: rgb(255 255 255 / 70%);
+    --radius: 22px;
+    --button: rgb(255 255 255 / 10%);
+    --button-hover: rgb(255 255 255 / 16%);
+    --track: rgb(255 255 255 / 22%);
+    --opaque: rgb(28 28 30 / 94%);
+    font: 13px/1.35 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
   * { box-sizing: border-box; }
-  .panel { background: #111a2026; border: 1px solid #627c8096; border-radius: 12px; padding: 8px 10px; box-shadow: 0 4px 20px #0007; }
+  .panel {
+    position: relative;
+    isolation: isolate;
+    padding: 9px 11px;
+    border-radius: var(--radius);
+    text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
+  }
+  .panel::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background-color: var(--glass);
+    box-shadow: 0 8px 32px rgb(0 0 0 / 32%), inset 2px 2px 0 -2px var(--rim), inset 0 0 3px 1px var(--rim);
+    content: "";
+    pointer-events: none;
+  }
+  .panel::after {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    backdrop-filter: blur(3px) saturate(1.2) brightness(0.72);
+    -webkit-backdrop-filter: blur(3px) saturate(1.2) brightness(0.72);
+    filter: url(#container-glass);
+    isolation: isolate;
+    content: "";
+    pointer-events: none;
+  }
   .row { display: flex; align-items: center; gap: 7px; }
-  .heading { justify-content: space-between; margin-bottom: 5px; font-size: 10px; letter-spacing: .06em; color: #9db9b6; }
-  button, select { font: inherit; color: inherit; background: ##22303820; border: 1px solid #53696e50; border-radius: 5px; min-height: 18px; cursor: pointer; }
-  button { padding: 3px 8px; white-space: nowrap; }
-  button:hover { background: #334b50; }
-  button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #6ef0ce; outline-offset: 2px; }
+  .heading { justify-content: space-between; margin-bottom: 6px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+  button, select { font: inherit; color: inherit; background: var(--button); border: 0; border-radius: 999px; box-shadow: inset 2px 2px 0 -2px var(--rim), inset 0 0 3px 1px var(--rim); min-height: 20px; cursor: pointer; transition: background 150ms ease, transform 120ms ease; }
+  button { padding: 3px 10px; white-space: nowrap; }
+  button:hover, select:hover { background: var(--button-hover); }
+  button:active { transform: scale(.97); }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   button:disabled, input:disabled { opacity: .45; cursor: default; }
-  input { accent-color: #63e5c3; cursor: pointer; min-width: 0; }
+  input { accent-color: var(--accent); cursor: pointer; min-width: 0; }
+  input[type=range] { appearance: none; -webkit-appearance: none; height: 20px; background: transparent; }
+  input[type=range]::-webkit-slider-runnable-track { height: 5px; border-radius: 999px; background: linear-gradient(90deg, var(--accent) var(--fill, 0%), var(--track) var(--fill, 0%)); box-shadow: inset 0 1px 2px rgb(0 0 0 / 14%); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; margin-top: -5px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 30%), 0 0 0 .5px rgb(0 0 0 / 8%); }
+  input[type=range]:disabled::-webkit-slider-thumb { opacity: .5; }
+  select { padding: 3px 8px; }
   #seek { flex: 1; width: 50px; }
   #volume { width: 62px; }
-  #time { font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  #time { font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--text-2); }
   .actions { flex-wrap: wrap; margin-top: 7px; }
-  #message { color: #a9f3df; min-height: 0; font-size: 11px; padding-top: 4px; }
+  #message { color: var(--accent); min-height: 0; font-size: 11px; padding-top: 4px; }
   #message:empty { display: none; }
-  #loop-state { color: #9fb7ba; font-size: 11px; }
+  #loop-state { color: var(--text-2); font-size: 11px; }
   [hidden] { display: none !important; }
-  .panel.collapsed { width: 40px; height: 40px; padding: 3px; border-radius: 10px; }
+  .panel.collapsed { width: 40px; height: 40px; padding: 4px; }
+  .panel.collapsed::before, .panel.collapsed::after { display: none; }
   .panel.collapsed .detail, .panel.collapsed .heading > span { display: none; }
   .panel.collapsed .heading { width: 100%; height: 100%; margin: 0; justify-content: center; }
-  .panel.collapsed #collapse { width: 32px; min-height: 32px; padding: 0; font-size: 17px; line-height: 1; }
+  .panel.collapsed #collapse { width: 32px; min-height: 32px; padding: 0; font-size: 17px; line-height: 1; border-radius: 50%; background: rgb(0 0 0 / 45%); box-shadow: none; color: #fff; text-shadow: none; }
+  .panel.collapsed #collapse:hover { background: rgb(0 0 0 / 55%); }
+  @media (prefers-reduced-transparency: reduce) {
+    .panel::before { background-color: var(--opaque); }
+    .panel::after { backdrop-filter: none; -webkit-backdrop-filter: none; filter: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
 </style>
 <section class="panel" aria-label="Reels">
   <div class="row heading"><span>Reels</span><button id="collapse" title="Collapse controls" aria-label="Collapse controls" aria-expanded="true">−</button></div>
@@ -108,7 +175,14 @@ root.innerHTML = `
     <div class="row actions" id="loop-controls"><button id="loop-start" title="Set loop start ([)">A [</button><button id="loop-end" title="Set loop end (])">B ]</button><button id="loop-clear" title="Clear loop (\\)">Clear</button><span id="loop-state">No section loop</span></div>
     <div id="message" role="status" aria-live="polite"></div>
   </div>
-</section>`;
+</section>
+<svg style="display: none" aria-hidden="true">
+  <filter id="container-glass" x="0%" y="0%" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
+    <feGaussianBlur in="noise" stdDeviation="0.02" result="blur" />
+    <feDisplacementMap in="SourceGraphic" in2="blur" scale="77" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>`;
 const ui = <T extends HTMLElement>(id: string) => root.getElementById(id) as T;
 const seek = ui<HTMLInputElement>("seek");
 const volume = ui<HTMLInputElement>("volume");
@@ -803,6 +877,10 @@ async function upgradeQuality(manual: boolean) {
   entry.cancelQuality = settle;
   timer = window.setTimeout(failed, 12000);
 }
+function setRangeFill(input: HTMLInputElement, ratio: number): void {
+  const value = Number.isFinite(ratio) ? Math.min(1, Math.max(0, ratio)) : 0;
+  input.style.setProperty("--fill", `${value * 100}%`);
+}
 function render() {
   const video = active;
   if (!video) return;
@@ -812,6 +890,8 @@ function render() {
   seek.disabled = !Number.isFinite(duration) || duration <= 0;
   seek.max = String(Number.isFinite(duration) ? duration : 0);
   if (!dragging) seek.value = String(video.currentTime || 0);
+  const seekMax = Number(seek.max);
+  setRangeFill(seek, seekMax > 0 ? Number(seek.value) / seekMax : 0);
   ui("time").textContent =
     `${formatTime(video.currentTime)} / ${formatTime(duration)}`;
   ui("play").textContent = video.paused ? "Play" : "Pause";
@@ -819,6 +899,7 @@ function render() {
   ui("mute").textContent = video.muted ? "Unmute" : "Mute";
   ui("mute").setAttribute("aria-label", video.muted ? "Unmute" : "Mute");
   volume.value = String(video.volume);
+  setRangeFill(volume, video.volume);
   speed.value = String(video.playbackRate);
   ui("loop-controls").hidden = !settings.loopSections;
   ui("loop-state").textContent =
@@ -1023,12 +1104,15 @@ seek.addEventListener("pointerdown", () => {
 });
 seek.addEventListener("input", () => {
   if (active) active.currentTime = Number(seek.value);
+  const seekMax = Number(seek.max);
+  setRangeFill(seek, seekMax > 0 ? Number(seek.value) / seekMax : 0);
 });
 for (const event of ["pointerup", "pointercancel", "change", "blur"])
   seek.addEventListener(event, () => {
     dragging = false;
   });
 volume.addEventListener("input", () => {
+  setRangeFill(volume, Number(volume.value));
   if (active) {
     active.volume = Number(volume.value);
     active.muted = active.volume === 0;
